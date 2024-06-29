@@ -1,0 +1,14 @@
+{
+  "name": "real-time-chat-app",
+  "version": "1.0.0",
+  "description": "This is a Reat-time Chat App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jigish Vyas",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
