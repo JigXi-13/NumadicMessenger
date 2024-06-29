@@ -11,9 +11,9 @@ const connectDB = async () => {
     process.exit(1); // Exit with a non-zero status code to indicate an error
   } finally {
     // Ensures that the client will close when you finish/error
-    if (conn) {
-      await conn.disconnect();
-    }
+    // if (conn) {
+    //   await conn.disconnect();
+    // }
   }
 };
 
