@@ -7,6 +7,7 @@ import { Box } from "@chakra-ui/layout";
 
 const Chatspage = () => {
   const { user } = ChatState();
+
   return (
     <div style={{ width: "100%" }}>
       {user && <SideDrawer />}
