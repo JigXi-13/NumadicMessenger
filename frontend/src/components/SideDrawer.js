@@ -124,14 +124,14 @@ function SideDrawer() {
         borderWidth="4px"
       >
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
-          <Button variant="ghost" onClick={onOpen}>
+          <Button onClick={onOpen}>
             <SearchIcon fontSize="2xl" m={1} />
-            <Text d={{ base: "none", md: "flex" }} px={4} fontSize={20}>
+            <Text display={{ base: "none", md: "flex" }} px={4} fontSize={18}>
               Search User
             </Text>
           </Button>
         </Tooltip>
-        <Text d={{ base: "none", md: "flex" }} fontSize="28">
+        <Text display={{ base: "none", md: "flex" }} fontSize="28">
           Numadic Messenger
         </Text>
         <div>

@@ -10,7 +10,7 @@ import ChatLoading from "./common/shimmerUI/ChatLoading";
 import { getSender } from "../utils/ChatUtils";
 import GroupChatModal from "./common/modal/GroupChatModal";
 
-function MyChats() {
+function MyChats({ fetchAgain }) {
   const [loggedUser, setLoggedUser] = useState();
 
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
@@ -21,7 +21,7 @@ function MyChats() {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchAgain]);
 
   const fetchChats = async () => {
     try {
@@ -61,7 +61,6 @@ function MyChats() {
         pb={3}
         px={3}
         fontSize={{ base: "28px", md: "30px" }}
-        fontFamily="Work sans"
         display="flex"
         w="100%"
         justifyContent="space-between"
