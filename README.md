@@ -49,7 +49,7 @@ This project is a real-time chat application where users can sign up, log in, jo
 
    ```sh
     NODE_ENV = development
-    PORT = 5000
+    PORT = 3500
     MONGO_URI = your_mongodb_connection_string
     JWT_SECRET = your_jwt_secret
 2. **Install dependencies:**
