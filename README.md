@@ -5,7 +5,8 @@
 This project is a real-time chat application where users can sign up, log in, join or create chat rooms, and send/receive messages in real time. It uses modern web technologies to ensure the application is responsive and scalable.
 
 ## Demo of the App:
-[![Demo Video](https://youtu.be/PkGRgoXnP-E)]
+
+   [Numadic Messenger](https://youtu.be/PkGRgoXnP-E)
 
 ## Table of Contents
 
