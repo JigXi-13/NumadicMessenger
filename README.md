@@ -59,10 +59,10 @@ This project is a real-time chat application where users can sign up, log in, jo
 3. **Run the application:**
    
    ```sh
-   Run this command to start the backend server.
+   Run this command to start the backend server:
    npm run dev
 
-   Now, in the other terminal run these commands to start the frontend server.
+   Now, in the other terminal run these commands to start the frontend server:
    cd frontend/
    npm run start
 
