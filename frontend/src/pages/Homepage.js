@@ -10,8 +10,8 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
-import Login from "../components/Login";
-import Signup from "../components/Signup";
+import Login from "../components/authentication/Login";
+import Signup from "../components/authentication/Signup";
 
 import { useNavigate } from "react-router-dom";
 
