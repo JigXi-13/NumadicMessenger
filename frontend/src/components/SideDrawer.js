@@ -1,35 +1,16 @@
 import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
-import { Input } from "@chakra-ui/input";
 import { Box, Text } from "@chakra-ui/layout";
-import {
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
-} from "@chakra-ui/menu";
-import {
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
-} from "@chakra-ui/modal";
 import { Tooltip } from "@chakra-ui/tooltip";
-import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
-import { Avatar } from "@chakra-ui/avatar";
+import { SearchIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/toast";
 
-import { Spinner } from "@chakra-ui/spinner";
-
 import { useNavigate } from "react-router-dom";
-import ProfileModal from "./common/modal/ProfileModal";
-import ChatLoading from "./common/shimmerUI/ChatLoading";
-import UserListItem from "./common/userAvatar/UserListItem";
 import { ChatState } from "../Context/ChatProvider";
+import SearchDrawer from "./common/drawer/SearchDrawer";
+import UserMenu from "./common/menu/UserMenu";
 
 function SideDrawer() {
   const [search, setSearch] = useState("");
@@ -134,56 +115,20 @@ function SideDrawer() {
         <Text display={{ base: "none", md: "flex" }} fontSize="28">
           Numadic Messenger
         </Text>
-        <div>
-          <Menu>
-            <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
-              <Avatar
-                size="sm"
-                cursor="pointer"
-                name={user.name}
-                src={user.pic}
-              />
-            </MenuButton>
-            <MenuList>
-              <ProfileModal user={user}>
-                <MenuItem>My Profile</MenuItem>{" "}
-              </ProfileModal>
-              <MenuDivider />
-              <MenuItem onClick={logoutHandler}>Logout</MenuItem>
-            </MenuList>
-          </Menu>
-        </div>
+        <UserMenu user={user} logoutHandler={logoutHandler} />
       </Box>
 
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerHeader borderBottomWidth="1px">Search Users</DrawerHeader>
-          <DrawerBody>
-            <Box display="flex" pb={2}>
-              <Input
-                placeholder="Search by name or email"
-                mr={2}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <Button onClick={handleSearch}>Go</Button>
-            </Box>
-            {loading ? (
-              <ChatLoading />
-            ) : (
-              searchResult?.map((user) => (
-                <UserListItem
-                  key={user._id}
-                  user={user}
-                  handleFunction={() => accessChat(user._id)}
-                />
-              ))
-            )}
-            {loadingChat && <Spinner ml="auto" display="flex" />}
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
+      <SearchDrawer
+        isOpen={isOpen}
+        onClose={onClose}
+        search={search}
+        setSearch={setSearch}
+        handleSearch={handleSearch}
+        searchResult={searchResult}
+        loading={loading}
+        accessChat={accessChat}
+        loadingChat={loadingChat}
+      />
     </>
   );
 }

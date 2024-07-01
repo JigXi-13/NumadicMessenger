@@ -1,9 +1,9 @@
 import { Box } from "@chakra-ui/layout";
-import "../styles/styles.css";
-import SingleChat from "./SingleChat.js";
-import { ChatState } from "../Context/ChatProvider";
+import "../../../styles/styles.css";
+import { ChatState } from "../../../Context/ChatProvider.js";
+import Chatbox from "./Chatbox.js";
 
-const Chatbox = ({ fetchAgain, setFetchAgain }) => {
+const ChatboxWrapper = ({ fetchAgain, setFetchAgain }) => {
   const { selectedChat } = ChatState();
 
   return (
@@ -17,9 +17,9 @@ const Chatbox = ({ fetchAgain, setFetchAgain }) => {
       borderRadius="lg"
       borderWidth="1px"
     >
-      <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
+      <Chatbox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
     </Box>
   );
 };
 
-export default Chatbox;
+export default ChatboxWrapper;

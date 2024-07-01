@@ -1,34 +1,20 @@
-import { FormControl } from "@chakra-ui/form-control";
-import { Input } from "@chakra-ui/input";
 import { Box, Text } from "@chakra-ui/layout";
-import "../styles/styles.css";
-import { IconButton, Spinner, useToast } from "@chakra-ui/react";
+import "../../../styles/styles.css";
+import { Spinner, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowBackIcon } from "@chakra-ui/icons";
-import { ChatState } from "../Context/ChatProvider";
-import { getSender, getSenderFull } from "../utils/ChatUtils";
-import ProfileModal from "./common/modal/ProfileModal";
-import UpdateGroupChatModal from "./common/modal/UpdateGroupChatModal";
+import { ChatState } from "../../../Context/ChatProvider";
 import ScrollableChat from "./ScrollableChat";
 
-import Lottie from "react-lottie";
-import animationData from "../animations/typing.json";
-
 import io from "socket.io-client";
+import ChatHeader from "./ChatHeader";
+import TypingIndicator from "./TypingIndicator";
+import MessageInput from "./MessageInput";
+
 const ENDPOINT = "http://localhost:3500";
 var socket, selectedChatCompare;
 
-const defaultOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: animationData,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
-
-const SingleChat = ({ fetchAgain, setFetchAgain }) => {
+const Chatbox = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
@@ -170,40 +156,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     <>
       {selectedChat ? (
         <>
-          <Text
-            fontSize={{ base: "28px", md: "30px" }}
-            pb={3}
-            px={2}
-            w="100%"
-            display="flex"
-            justifyContent={{ base: "space-between" }}
-            alignItems="center"
-          >
-            <IconButton
-              d={{ base: "flex", md: "none" }}
-              icon={<ArrowBackIcon />}
-              onClick={() => setSelectedChat("")}
-            />
-            {!selectedChat.isGroupChat ? (
-              <>
-                {getSender(user, selectedChat.users)}
-                <ProfileModal
-                  activeUsers={activeUsers}
-                  loggedInUser={user}
-                  user={getSenderFull(user, selectedChat.users)}
-                />
-              </>
-            ) : (
-              <>
-                {selectedChat.chatName.toUpperCase()}
-                <UpdateGroupChatModal
-                  fetchMessages={fetchMessages}
-                  fetchAgain={fetchAgain}
-                  setFetchAgain={setFetchAgain}
-                ></UpdateGroupChatModal>
-              </>
-            )}
-          </Text>
+          <ChatHeader
+            user={user}
+            selectedChat={selectedChat}
+            setSelectedChat={setSelectedChat}
+            activeUsers={activeUsers}
+            fetchMessages={fetchMessages}
+            fetchAgain={fetchAgain}
+            setFetchAgain={setFetchAgain}
+          />
           <Box
             display="flex"
             flexDir="column"
@@ -229,32 +190,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               </div>
             )}
 
-            <FormControl
-              onKeyDown={sendMessage}
-              id="first-name"
-              isRequired
-              mt={3}
-            >
-              {istyping ? (
-                <div>
-                  <Lottie
-                    options={defaultOptions}
-                    height={50}
-                    width={70}
-                    style={{ marginBottom: 15, marginLeft: 0 }}
-                  />
-                </div>
-              ) : (
-                <></>
-              )}
-              <Input
-                _hover={"white"}
-                variant="filled"
-                placeholder="Enter a message.."
-                value={newMessage}
-                onChange={typingHandler}
-              />
-            </FormControl>
+            {istyping && <TypingIndicator />}
+
+            <MessageInput
+              sendMessage={sendMessage}
+              newMessage={newMessage}
+              setNewMessage={setNewMessage}
+              typingHandler={typingHandler}
+            />
           </Box>
         </>
       ) : (
@@ -273,4 +216,4 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   );
 };
 
-export default SingleChat;
+export default Chatbox;

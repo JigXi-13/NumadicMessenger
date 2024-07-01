@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { ChatState } from "../Context/ChatProvider";
+import { ChatState } from "../../../Context/ChatProvider";
 
 import { AddIcon } from "@chakra-ui/icons";
 import { Box, Stack, Text } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { Button } from "@chakra-ui/react";
-import ChatLoading from "./common/shimmerUI/ChatLoading";
-import { getSender } from "../utils/ChatUtils";
-import GroupChatModal from "./common/modal/GroupChatModal";
+import ChatLoading from "../../common/shimmerUI/ChatLoading";
+import { getSender } from "../../../utils/ChatUtils";
+import GroupChatModal from "../../common/modal/GroupChatModal";
 
 function MyChats({ fetchAgain }) {
   const [loggedUser, setLoggedUser] = useState();
