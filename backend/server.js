@@ -3,6 +3,8 @@ const connectDB = require("./config/db");
 const dotenv = require("dotenv");
 dotenv.config();
 
+const { Server } = require("socket.io");
+
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
@@ -38,7 +40,49 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3500;
-app.listen(
+
+const server = app.listen(
   PORT,
-  console.log(`Server listening on port number ${PORT}`.yellow.bold)
+  console.log(`Server running on PORT ${PORT}...`.yellow.bold)
 );
+
+const io = new Server(server, {
+  /* options */
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:3000",
+    // credentials: true,
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("New client connected");
+
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+    socket.emit("connected");
+  });
+
+  socket.on("join chat", (room) => {
+    socket.join(room);
+    console.log("User Joined Chat Room: " + room);
+  });
+
+  socket.on("new message", (newMessageRecieved) => {
+    let chat = newMessageRecieved.chat;
+
+    if (!chat.users) return console.log("chat.users not defined");
+
+    chat.users.forEach((user) => {
+      // we do not have to broadcast the message to ourself
+      if (user._id == newMessageRecieved.sender._id) return;
+
+      socket.in(user._id).emit("message recieved", newMessageRecieved);
+    });
+  });
+
+  socket.off("setup", () => {
+    console.log("USER DISCONNECTED");
+    socket.leave(userData._id);
+  });
+});

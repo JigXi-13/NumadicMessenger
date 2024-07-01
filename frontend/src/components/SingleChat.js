@@ -12,6 +12,10 @@ import ProfileModal from "./common/modal/ProfileModal";
 import UpdateGroupChatModal from "./common/modal/UpdateGroupChatModal";
 import ScrollableChat from "./ScrollableChat";
 
+import io from "socket.io-client";
+const ENDPOINT = "http://localhost:3500";
+var socket, selectedChatCompare;
+
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -20,6 +24,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const [typing, setTyping] = useState(false);
   const [istyping, setIsTyping] = useState(false);
+
+  const [socketConnected, setSocketConnected] = useState(false);
 
   const { selectedChat, setSelectedChat, user } = ChatState();
 
@@ -41,6 +47,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       );
       setMessages(data);
       setLoading(false);
+
+      socket.emit("join chat", selectedChat._id);
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -71,6 +79,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
           config
         );
+        socket.emit("new message", data);
         setMessages([...messages, data]);
       } catch (error) {
         toast({
@@ -90,9 +99,33 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", user);
+    socket.on("connected", () => setSocketConnected(true));
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     fetchMessages();
+    selectedChatCompare = selectedChat;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChat]);
+
+  useEffect(() => {
+    socket.on("message recieved", (newMessageRecieved) => {
+      // if chat is not selected or doesn't match current chat
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+        setFetchAgain(!fetchAgain);
+      } else {
+        setMessages([...messages, newMessageRecieved]);
+      }
+    });
+  });
 
   return (
     <>
