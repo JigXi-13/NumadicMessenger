@@ -11,8 +11,8 @@ const UserBadgeItem = ({ user, handleFunction, admin }) => {
       mb={2}
       variant="solid"
       fontSize={12}
-      colorScheme="purple"
       cursor="pointer"
+      backgroundColor={"rgb(27, 27, 27)"}
       onClick={handleFunction}
     >
       {user.name}
