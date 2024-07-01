@@ -91,6 +91,7 @@ function Signup() {
         isClosable: true,
         position: "bottom",
       });
+      setPicLoading(false);
       return;
     }
 
