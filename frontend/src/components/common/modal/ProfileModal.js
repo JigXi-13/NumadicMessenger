@@ -14,15 +14,50 @@ import {
   Image,
 } from "@chakra-ui/react";
 
-const ProfileModal = ({ user, children }) => {
+import { useEffect, useState } from "react";
+
+const ProfileModal = ({ activeUsers, loggedInUser, user, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [isUserActiveColor, setIsUserActiveColor] = useState();
+  const [isUserActiveStatus, setIsUserActiveStatus] = useState();
+
+  useEffect(() => {
+    if (
+      activeUsers?.length > 0 &&
+      activeUsers.find((activeUser) => activeUser._id !== loggedInUser._id)
+    ) {
+      setIsUserActiveColor("green");
+      setIsUserActiveStatus("Online");
+    } else {
+      setIsUserActiveColor("red");
+      setIsUserActiveStatus("Offline");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeUsers]);
 
   return (
     <>
       {children ? (
         <span onClick={onOpen}>{children}</span>
       ) : (
-        <IconButton d={{ base: "flex" }} icon={<ViewIcon />} onClick={onOpen} />
+        <span
+          style={{ display: "flex", alignItems: "center", columnGap: "8px" }}
+        >
+          <Text
+            display={"flex"}
+            fontSize={"18px"}
+            fontWeight="bold"
+            color={isUserActiveColor}
+          >
+            {isUserActiveStatus}
+          </Text>
+          <IconButton
+            display={{ base: "flex" }}
+            icon={<ViewIcon />}
+            onClick={onOpen}
+          />
+        </span>
       )}
       <Modal size="lg" onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />

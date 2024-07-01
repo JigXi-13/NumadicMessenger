@@ -55,12 +55,31 @@ const io = new Server(server, {
   },
 });
 
+let activeUsers = [];
+
 io.on("connection", (socket) => {
   console.log("New client connected");
 
   socket.on("setup", (userData) => {
     socket.join(userData._id);
+
+    socket.userData = userData;
+    if (!activeUsers.some((user) => user._id === userData._id)) {
+      activeUsers.push(userData);
+    }
+    io.emit("active users", activeUsers);
+
     socket.emit("connected");
+  });
+
+  socket.on("disconnect", () => {
+    if (socket.userData && socket.userData._id) {
+      activeUsers = activeUsers.filter(
+        (user) => user._id !== socket.userData._id
+      );
+      io.emit("active users", activeUsers);
+      console.log("Client disconnected");
+    }
   });
 
   socket.on("join chat", (room) => {

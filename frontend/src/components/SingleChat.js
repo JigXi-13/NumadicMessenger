@@ -41,6 +41,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const { selectedChat, setSelectedChat, user } = ChatState();
 
+  const [activeUsers, setActiveUsers] = useState([]);
+
   const fetchMessages = async () => {
     if (!selectedChat) return;
 
@@ -134,6 +136,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
+    socket.on("active users", (activeUsers) => {
+      setActiveUsers(activeUsers);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
     // eslint-disable-next-line
   }, []);
 
@@ -178,7 +187,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             {!selectedChat.isGroupChat ? (
               <>
                 {getSender(user, selectedChat.users)}
-                <ProfileModal user={getSenderFull(user, selectedChat.users)} />
+                <ProfileModal
+                  activeUsers={activeUsers}
+                  loggedInUser={user}
+                  user={getSenderFull(user, selectedChat.users)}
+                />
               </>
             ) : (
               <>
